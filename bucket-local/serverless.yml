@@ -1,0 +1,31 @@
+service: aws-s3-bucket-test
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-s3-local
+  - serverless-offline
+
+custom:
+  s3:
+    host: localhost
+    directory: ./assets/bucket-local
+  resources:
+    Resources:
+      NewResource:
+        Type: AWS::S3::Bucket
+        Properties:
+          BucketName: bucket-local
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+functions:
+  hello:
+    handler: handler.hello
+  s3hook:
+    handler: handler.s3hook
+    events:
+      - s3: bucket-local
+        event: s3:*
